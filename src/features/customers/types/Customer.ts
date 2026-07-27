@@ -14,6 +14,8 @@ export interface Customer {
 
   phone: string;
 
+  assigned_to?: string;
+
   alternate_phone?: string;
 
   email?: string;
