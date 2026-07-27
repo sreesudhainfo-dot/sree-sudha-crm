@@ -1,65 +1,91 @@
 import { useEffect, useState } from "react";
-import StatsCard from "../../../components/cards/StatsCard";
-import { getEmployees } from "../../../services/employees";
+
+import TodaySummary from "../components/TodaySummary";
+import DashboardHeader from "../components/DashboardHeader";
+import KPIGrid from "../components/KPIGrid";
+import DepartmentGrid from "../components/DepartmentGrid";
+import QuickActions from "../components/QuickActions";
+import RecentActivity from "../components/RecentActivity";
+// import { getEmployees } from "../../../services/employees";
+import { getAttendanceSummary } from "../../attendence/services/attendence";
+
+import {
+  getEmployees,
+  type Employee,
+} from "../../../services/employees";
 
 export default function DashboardPage() {
-  const [totalEmployees, setTotalEmployees] = useState(0);
-  const [activeEmployees, setActiveEmployees] = useState(0);
-  const [inactiveEmployees, setInactiveEmployees] = useState(0);
+const [todayAttendance, setTodayAttendance] = useState(0);
+  const [employees, setEmployees] =
+  useState<Employee[]>([]);
+
+  const [totalEmployees, setTotalEmployees] =
+    useState(0);
+
+  const [activeEmployees, setActiveEmployees] =
+    useState(0);
+
+  const [inactiveEmployees, setInactiveEmployees] =
+    useState(0);
 
   useEffect(() => {
     loadDashboard();
   }, []);
 
   async function loadDashboard() {
+    const attendance = await getAttendanceSummary();
+setTodayAttendance(attendance.present);
+    const employees =
+  await getEmployees();
+  setEmployees(employees);
     try {
-      const employees = await getEmployees();
 
-      setTotalEmployees(employees?.length || 0);
+      const employees =
+        await getEmployees();
+
+      setTotalEmployees(
+        employees.length
+      );
 
       setActiveEmployees(
-        employees?.filter((e) => e.is_active).length || 0
+        employees.filter(
+          (employee) => employee.is_active
+        ).length
       );
 
       setInactiveEmployees(
-        employees?.filter((e) => !e.is_active).length || 0
+        employees.filter(
+          (employee) => !employee.is_active
+        ).length
       );
-    } catch (err) {
-      console.error(err);
+
+    } catch (error) {
+
+      console.error(error);
+
     }
   }
 
   return (
+
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-800">
-          Dashboard
-        </h1>
 
-        <p className="text-gray-500">
-          Welcome to Sree Sudha Operations Portal
-        </p>
-      </div>
+      <DashboardHeader />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatsCard
-          title="Total Employees"
-          value={String(totalEmployees)}
-          color="text-blue-600"
-        />
-
-        <StatsCard
-          title="Active Employees"
-          value={String(activeEmployees)}
-          color="text-green-600"
-        />
-
-        <StatsCard
-          title="Inactive Employees"
-          value={String(inactiveEmployees)}
-          color="text-red-600"
-        />
-      </div>
+      <KPIGrid
+  totalEmployees={totalEmployees}
+  activeEmployees={activeEmployees}
+  inactiveEmployees={inactiveEmployees}
+  todayAttendance={todayAttendance}
+/>
+<DepartmentGrid
+  employees={employees}
+/>
+<QuickActions />
+<RecentActivity />
+<TodaySummary />
     </div>
+
   );
+
 }

@@ -91,30 +91,54 @@ export async function deleteAttendance(
  * Attendance Summary
  */
 export async function getAttendanceSummary() {
-
-  const today = new Date()
-    .toLocaleDateString("en-CA", {
-      timeZone: "Asia/Kolkata",
-    });
+  const today = new Date().toISOString().split("T")[0];
 
   const { data, error } = await supabase
     .from("attendance")
-    .select("status")
-    .eq("attendance_date", today);
+    .select("*");
 
   if (error) throw error;
 
+  const todayAttendance = (data ?? []).filter((item: any) => {
+    console.log(
+      "DB Date:",
+      item.attendance_date,
+      "Today:",
+      today,
+      "Match:",
+      String(item.attendance_date).substring(0, 10) === today
+    );
+
+    return (
+      String(item.attendance_date).substring(0, 10) === today
+    );
+  });
+
+  console.log("Today's Records:", todayAttendance);
+console.log({
+  present: todayAttendance.filter(
+    (item: any) => item.status?.trim() === "Present"
+  ).length,
+
+  leave: todayAttendance.filter(
+    (item: any) => item.status?.trim() === "Leave"
+  ).length,
+
+  halfDay: todayAttendance.filter(
+    (item: any) => item.status?.trim() === "Half Day"
+  ).length,
+});
   return {
-    present: data.filter(
-      (a) => a.status === "Present"
+    present: todayAttendance.filter(
+      (item: any) => item.status?.trim() === "Present"
     ).length,
 
-    leave: data.filter(
-      (a) => a.status === "Leave"
+    leave: todayAttendance.filter(
+      (item: any) => item.status?.trim() === "Leave"
     ).length,
 
-    halfDay: data.filter(
-      (a) => a.status === "Half Day"
+    halfDay: todayAttendance.filter(
+      (item: any) => item.status?.trim() === "Half Day"
     ).length,
   };
 }

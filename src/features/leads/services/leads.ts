@@ -1,5 +1,5 @@
 import { supabase } from "../../../lib/supabase";
-import type { Lead } from "../types/Lead";
+import type { Lead ,LeadStatus } from "../types/Lead";
 
 /**
  * Get all leads
@@ -106,7 +106,7 @@ export async function assignLead(
  */
 export async function changeLeadStatus(
   id: string,
-  status: Lead
+  status: LeadStatus,
 ): Promise<void> {
   const { error } = await supabase
     .from("leads")

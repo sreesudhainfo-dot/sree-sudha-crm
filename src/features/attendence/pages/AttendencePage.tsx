@@ -135,9 +135,16 @@ const [showCardModal, setShowCardModal] = useState(false);
 
   }
   async function openCard(title: string) {
-    const today = new Date().toLocaleDateString("en-CA", {
+    const now = new Date();
+
+console.log("Current Time:", now.toString());
+console.log("Current ISO:", now.toISOString());
+
+const today = now.toLocaleDateString("en-CA", {
   timeZone: "Asia/Kolkata",
 });
+
+console.log("Today:", today);
 
 const todayAttendance = attendance.filter(
   (a) => a.attendance_date === today

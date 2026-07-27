@@ -2,16 +2,23 @@ import { supabase } from "../lib/supabase";
 
 export interface Employee {
   id?: number;
+
   employee_id?: string;
 
   full_name: string;
+
   personal_phone: string;
+
   company_phone: string;
+
   email: string;
 
   role_id: number;
 
   joining_date?: string;
+
+  relieving_date?: string | null;
+
   is_active?: boolean;
 
   roles?: {
@@ -28,7 +35,9 @@ export async function getEmployees() {
         role_name
       )
     `)
-    .order("id", { ascending: true });
+    .order("id", {
+      ascending: true,
+    });
 
   if (error) throw error;
 
@@ -52,10 +61,21 @@ export async function getEmployee(id: number) {
   return data;
 }
 
-export async function addEmployee(employee: Employee) {
+export async function addEmployee(
+  employee: Employee
+) {
   const { data, error } = await supabase
     .from("employees")
-    .insert(employee)
+    .insert({
+      full_name: employee.full_name,
+      personal_phone: employee.personal_phone,
+      company_phone: employee.company_phone,
+      email: employee.email,
+      role_id: employee.role_id,
+      joining_date: employee.joining_date,
+      is_active: true,
+      relieving_date: null,
+    })
     .select();
 
   if (error) throw error;
@@ -70,12 +90,13 @@ export async function updateEmployee(
   const { data, error } = await supabase
     .from("employees")
     .update({
-      full_name: employee.full_name,
-      personal_phone: employee.personal_phone,
-      company_phone: employee.company_phone,
-      email: employee.email,
-      role_id: employee.role_id,
-    })
+  full_name: employee.full_name,
+  personal_phone: employee.personal_phone,
+  company_phone: employee.company_phone,
+  email: employee.email,
+  role_id: employee.role_id,
+  joining_date: employee.joining_date,
+})
     .eq("id", id)
     .select();
 
@@ -84,11 +105,17 @@ export async function updateEmployee(
   return data;
 }
 
-export async function deactivateEmployee(id: number) {
+export async function deactivateEmployee(
+  id: number
+) {
+  const today =
+    new Date().toISOString().split("T")[0];
+
   const { data, error } = await supabase
     .from("employees")
     .update({
       is_active: false,
+      relieving_date: today,
     })
     .eq("id", id)
     .select();
@@ -98,11 +125,14 @@ export async function deactivateEmployee(id: number) {
   return data;
 }
 
-export async function activateEmployee(id: number) {
+export async function activateEmployee(
+  id: number
+) {
   const { data, error } = await supabase
     .from("employees")
     .update({
       is_active: true,
+      relieving_date: null,
     })
     .eq("id", id)
     .select();

@@ -2,7 +2,7 @@ import type { Employee } from "../../../services/employees";
 import {
   activateEmployee,
   deactivateEmployee,
-}  from "../../../services/employees";
+} from "../../../services/employees";
 
 interface Props {
   employees: Employee[];
@@ -15,55 +15,96 @@ export default function EmployeeTable({
   onEdit,
   onRefresh,
 }: Props) {
-
   async function toggleStatus(employee: Employee) {
     if (!employee.id) return;
 
     try {
       if (employee.is_active) {
+        if (
+          !window.confirm(
+            "Deactivate this employee?"
+          )
+        )
+          return;
+
         await deactivateEmployee(employee.id);
-        alert("Employee Deactivated");
+
+        alert(
+          "Employee Deactivated Successfully"
+        );
       } else {
         await activateEmployee(employee.id);
-        alert("Employee Activated");
+
+        alert(
+          "Employee Activated Successfully"
+        );
       }
 
       onRefresh();
 
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+
+      alert("Something went wrong.");
     }
   }
 
-
   if (employees.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow text-center text-slate-500">
-        No employees found.
+      <div className="rounded-xl bg-white p-10 text-center shadow">
+        No Employees Found
       </div>
     );
   }
 
-
   return (
     <div className="overflow-x-auto rounded-xl bg-white shadow">
 
-      <table className="w-full text-left">
+      <table className="min-w-full">
 
-        <thead className="border-b bg-slate-100">
+        <thead className="bg-slate-100">
+
           <tr>
-            <th className="p-4">Employee ID</th>
-            <th className="p-4">Name</th>
-            <th className="p-4">Role</th>
-            <th className="p-4">Personal Phone</th>
-            <th className="p-4">Company Phone</th>
-            <th className="p-4">Email</th>
-            <th className="p-4">Status</th>
-            <th className="p-4">Actions</th>
-          </tr>
-        </thead>
 
+            <th className="p-4 text-left">
+              Employee ID
+            </th>
+
+            <th className="p-4 text-left">
+              Employee
+            </th>
+
+            <th className="p-4">
+              Role
+            </th>
+
+            <th className="p-4">
+              Personal Phone
+            </th>
+
+            <th className="p-4">
+              Company Phone
+            </th>
+
+            <th className="p-4">
+              Joining Date
+            </th>
+
+            <th className="p-4">
+              Relieving Date
+            </th>
+
+            <th className="p-4">
+              Status
+            </th>
+
+            <th className="p-4">
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
 
         <tbody>
 
@@ -71,50 +112,58 @@ export default function EmployeeTable({
 
             <tr
               key={employee.id}
-              className="border-b hover:bg-slate-50"
+              className="border-t hover:bg-slate-50"
             >
 
               <td className="p-4">
-                {employee.employee_id || "-"}
+                {employee.employee_id ?? "-"}
               </td>
-
-
-              <td className="p-4 font-medium">
-                {employee.full_name}
-              </td>
-
 
               <td className="p-4">
-                {employee.roles?.role_name || "-"}
+
+                <div className="font-semibold">
+                  {employee.full_name}
+                </div>
+
+                <div className="text-sm text-gray-500">
+                  {employee.email}
+                </div>
+
               </td>
 
+              <td className="p-4 text-center">
+                {employee.roles?.role_name ??
+                  "-"}
+              </td>
 
-              <td className="p-4">
+              <td className="p-4 text-center">
                 {employee.personal_phone}
               </td>
 
-
-              <td className="p-4">
+              <td className="p-4 text-center">
                 {employee.company_phone}
               </td>
 
-
-              <td className="p-4">
-                {employee.email}
+              <td className="p-4 text-center">
+                {employee.joining_date ?? "-"}
               </td>
 
+              <td className="p-4 text-center">
+                {employee.relieving_date ??
+                  "-"}
+              </td>
 
-              <td className="p-4">
+              <td className="p-4 text-center">
 
                 {employee.is_active ? (
 
-                  <span className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                  <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                     Active
                   </span>
 
                 ) : (
 
-                  <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
+                  <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
                     Inactive
                   </span>
 
@@ -122,34 +171,33 @@ export default function EmployeeTable({
 
               </td>
 
-
               <td className="p-4">
 
-                <div className="flex gap-2">
+                <div className="flex justify-center gap-2">
 
                   <button
-                    onClick={() => onEdit(employee)}
+                    onClick={() =>
+                      onEdit(employee)
+                    }
                     className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
                   >
                     Edit
                   </button>
 
-
                   <button
-                    onClick={() => toggleStatus(employee)}
+                    onClick={() =>
+                      toggleStatus(employee)
+                    }
                     className="rounded border px-3 py-1 hover:bg-slate-100"
                   >
-                    {
-                      employee.is_active
-                        ? "Deactivate"
-                        : "Activate"
-                    }
+                    {employee.is_active
+                      ? "Deactivate"
+                      : "Activate"}
                   </button>
 
                 </div>
 
               </td>
-
 
             </tr>
 

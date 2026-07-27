@@ -17,6 +17,17 @@ import SubAgentsPage from "../../features/marketing/pages/SubAgentsPage";
 import HierarchyPage from "../../features/marketing/pages/HirerarchyPage";
 import MarketingReports from "../../features/marketing/pages/MarketingReports";
 import MediaLibraryPage from "../../features/media-library/pages/MediaLibraryPage";
+import ReportsDashboard from "../../features/reports/pages/ReportsDashboard";
+import EmployeePerformancePage from "../../features/reports/pages/EmployeePerformancePage";
+import AttendanceReportPage from "../../features/reports/pages/AttendanceReportPage";
+import CustomerAssignmentPage from "../../features/reports/pages/CustomerAssignmentPage";
+// import MonthlyActivityPage from "../../features/reports/pages/MonthlyActivityPage";
+import SiteVisitReportPage from "../../features/reports/pages/SiteVisitReportPage";
+import BookingReportPage from "../../features/reports/pages/BookingReports";
+import MonthlyActivityPage from "../../features/reports/pages/MonthlyActivityPage";
+import AddEmployeePage from "../../features/employees/pages/AddEmployeePage";
+import EmployeesRolePage from "../../features/employees/pages/EmployeesRolePage";
+import EditEmployeePage from "../../features/employees/components/EditEmployeePage";
 
 export default function AppRouter() {
   return (
@@ -27,17 +38,40 @@ export default function AppRouter() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
 <Route
+  path="/employees/new"
+  element={<AddEmployeePage />}
+/>
+<Route
     path="/customers"
     element={<CustomersPage />}
 />
+<Route
+  path="/employees/edit/:id"
+  element={<EditEmployeePage /> } />
 
+<Route
+  path="/employees/:role"
+  element={<EmployeesRolePage />}
+/>
+<Route path="/reports" element = {<ReportsDashboard />} />
 {/* marketing */}
 <Route path = "/marketing/dashboard" element = {<MarketingDashboard />} />
 <Route
     path="/marketing/managers" element = {<ManagersPage />} />
  <Route
     path="/marketing/agents" element = {<AgentsPage />} />
-
+<Route
+  path="/reports/site-visits"
+  element={<SiteVisitReportPage />}
+/>
+<Route
+  path="/reports/monthly-activity"
+  element={<MonthlyActivityPage />}
+/>
+<Route
+  path="/reports/bookings"
+  element={<BookingReportPage />}
+/>
     <Route
     path="/marketing/sub-agents" element = { <SubAgentsPage /> } />
 
@@ -46,7 +80,16 @@ export default function AppRouter() {
 
     <Route
     path="/marketing/reports" element = { <MarketingReports /> } />
-
+{/* Report */}
+<Route path="/reports" element= {<ReportsDashboard /> } />
+<Route
+  path="/reports/employee-performance" element={<EmployeePerformancePage />} />
+ 
+<Route path="/reports/attendance"  element= {<AttendanceReportPage /> } />
+<Route path="/reports/customer-assignment" element={<CustomerAssignmentPage />} />
+<Route path="
+/reports/monthly-activity" element={<MonthlyActivityPage /> } />
+<Route path="/reports/site-visits" element={<SiteVisitsPage />} />
           {/* Employees */}
           <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/site-visits" element={<SiteVisitsPage />} />

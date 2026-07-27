@@ -28,6 +28,7 @@ export default function EmployeeForm({
     company_phone: "",
     email: "",
     role_id: 1,
+    joining_date: "",
   });
 
   useEffect(() => {
@@ -46,11 +47,12 @@ export default function EmployeeForm({
   useEffect(() => {
     if (employee) {
       setForm({
-        full_name: employee.full_name,
-        personal_phone: employee.personal_phone,
-        company_phone: employee.company_phone,
-        email: employee.email,
+        full_name: employee.full_name ?? "",
+        personal_phone: employee.personal_phone ?? "",
+        company_phone: employee.company_phone ?? "",
+        email: employee.email ?? "",
         role_id: employee.role_id,
+        joining_date: employee.joining_date ?? "",
       });
     } else {
       setForm({
@@ -59,6 +61,7 @@ export default function EmployeeForm({
         company_phone: "",
         email: "",
         role_id: 1,
+        joining_date: "",
       });
     }
   }, [employee]);
@@ -68,11 +71,11 @@ export default function EmployeeForm({
       if (employee?.id) {
         await updateEmployee(employee.id, form);
 
-        alert("Employee Updated ✅");
+        alert("Employee Updated Successfully");
       } else {
         await addEmployee(form);
 
-        alert("Employee Added ✅");
+        alert("Employee Added Successfully");
       }
 
       onEmployeeAdded();
@@ -83,6 +86,7 @@ export default function EmployeeForm({
         company_phone: "",
         email: "",
         role_id: 1,
+        joining_date: "",
       });
 
     } catch (err) {
@@ -104,12 +108,12 @@ export default function EmployeeForm({
   return (
     <div className="rounded-xl bg-white p-6 shadow space-y-4">
 
-      <h2 className="text-xl font-bold">
+      <h2 className="text-2xl font-bold">
         {employee ? "Edit Employee" : "Add Employee"}
       </h2>
 
       <input
-        className="w-full border p-2 rounded"
+        className="w-full rounded border p-3"
         placeholder="Full Name"
         value={form.full_name}
         onChange={(e) =>
@@ -123,7 +127,7 @@ export default function EmployeeForm({
       <input
         type="tel"
         maxLength={13}
-        className="w-full border p-2 rounded"
+        className="w-full rounded border p-3"
         placeholder="Personal Phone"
         value={form.personal_phone}
         onChange={(e) =>
@@ -139,7 +143,7 @@ export default function EmployeeForm({
       <input
         type="tel"
         maxLength={13}
-        className="w-full border p-2 rounded"
+        className="w-full rounded border p-3"
         placeholder="Company Phone"
         value={form.company_phone}
         onChange={(e) =>
@@ -153,7 +157,8 @@ export default function EmployeeForm({
       />
 
       <input
-        className="w-full border p-2 rounded"
+        type="email"
+        className="w-full rounded border p-3"
         placeholder="Email"
         value={form.email}
         onChange={(e) =>
@@ -163,8 +168,9 @@ export default function EmployeeForm({
           })
         }
       />
-            <select
-        className="w-full border p-2 rounded"
+
+      <select
+        className="w-full rounded border p-3"
         value={form.role_id}
         onChange={(e) =>
           setForm({
@@ -183,33 +189,39 @@ export default function EmployeeForm({
         ))}
       </select>
 
+      <div>
+
+        <label className="mb-2 block font-medium">
+          Date of Joining
+        </label>
+
+        <input
+          type="date"
+          className="w-full rounded border p-3"
+          value={form.joining_date}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              joining_date: e.target.value,
+            })
+          }
+        />
+
+      </div>
+
       <div className="flex gap-3">
 
         <button
           onClick={saveEmployee}
-          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
         >
-          {employee ? "Update Employee" : "Save Employee"}
+          {employee
+            ? "Update Employee"
+            : "Save Employee"}
         </button>
 
-        {employee && (
-          <button
-            onClick={() =>
-              setForm({
-                full_name: "",
-                personal_phone: "",
-                company_phone: "",
-                email: "",
-                role_id: 1,
-              })
-            }
-            className="rounded border border-slate-300 px-4 py-2 hover:bg-slate-100"
-          >
-            Cancel
-          </button>
-        )}
-
       </div>
+
     </div>
   );
 }

@@ -24,14 +24,7 @@ export const navigation = [
   {
     title: "Employees",
     icon: FaUsers,
-    children: [
-      { title: "Digital Marketers", icon: FaBullhorn, path: "/digital-marketers" },
-      { title: "Telecallers", icon: FaPhoneAlt, path: "/telecallers" },
-      { title: "Marketers", icon: FaUserTie, path: "/marketers" },
-      { title: "Receptionist", icon: FaUserFriends, path: "/receptionist" },
-{ title: "Office Boy", icon: FaBuilding, path: "/office-boy" },
-{ title: "Accounts", icon: FaBuilding, path: "/accounts" },
-    ],
+   path: "/employees" ,
   },
    // Marketing
   {
