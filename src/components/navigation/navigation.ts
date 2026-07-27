@@ -33,15 +33,67 @@ export const navigation = [
 { title: "Accounts", icon: FaBuilding, path: "/accounts" },
     ],
   },
+   // Marketing
+  {
+    title: "Marketing",
+    icon: FaBullhorn,
+    children: [
+      {
+        title: "Dashboard",
+        icon: FaChartPie,
+        path: "/marketing/dashboard",
+      },
+      {
+        title: "Managers",
+        icon: FaUserTie,
+        path: "/marketing/managers",
+      },
+      {
+        title: "Agents",
+        icon: FaUsers,
+        path: "/marketing/agents",
+      },
+      {
+        title: "Sub Agents",
+        icon: FaUserFriends,
+        path: "/marketing/sub-agents",
+      },
+      {
+        title: "Hierarchy",
+        icon: FaBuilding,
+        path: "/marketing/hierarchy",
+      },
+      {
+        title: "Reports",
+        icon: FaChartBar,
+        path: "/marketing/reports",
+      },
+    ],
+  },
+
+  // CRM
   {
     title: "Lead Management",
     icon: FaDatabase,
     children: [
-      { title: "Leads", icon: FaUsers  ,path: "/leads" },
-      { title: "Customers", icon: FaAddressBook, path: "/customers" },
-      { title: "Site Visits", icon: FaMapMarkedAlt, path: "/site-visits" },
+      {
+        title: "Leads",
+        icon: FaUsers,
+        path: "/leads",
+      },
+      {
+        title: "Customers",
+        icon: FaAddressBook,
+        path: "/customers",
+      },
+      {
+        title: "Site Visits",
+        icon: FaMapMarkedAlt,
+        path: "/site-visits",
+      },
     ],
   },
+
   {
     title: "Attendance",
     icon: FaClipboardCheck,

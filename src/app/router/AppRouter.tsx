@@ -10,6 +10,12 @@ import CustomersPage from "../../features/customers/pages/CustomersPage";
 import SiteVisitsPage from "../../features/site-visits/pages/SiteVisitsPage";
 import AccountsPage from "../../features/accounts/pages/AccountsPage";
 import AttendancePage from "../../features/attendence/pages/AttendencePage";
+import MarketingDashboard from "../../features/marketing/pages/MarketingDashboard";
+import ManagersPage from "../../features/marketing/pages/MangersPage";
+import AgentsPage from "../../features/marketing/pages/AgentsPage";
+import SubAgentsPage from "../../features/marketing/pages/SubAgentsPage";
+import HierarchyPage from "../../features/marketing/pages/HirerarchyPage";
+import MarketingReports from "../../features/marketing/pages/MarketingReports";
 
 export default function AppRouter() {
   return (
@@ -23,6 +29,23 @@ export default function AppRouter() {
     path="/customers"
     element={<CustomersPage />}
 />
+
+{/* marketing */}
+<Route path = "/marketing/dashboard" element = {<MarketingDashboard />} />
+<Route
+    path="/marketing/managers" element = {<ManagersPage />} />
+ <Route
+    path="/marketing/agents" element = {<AgentsPage />} />
+
+    <Route
+    path="/marketing/sub-agents" element = { <SubAgentsPage /> } />
+
+    <Route
+    path="/marketing/hierarchy" element = { <HierarchyPage /> } />
+
+    <Route
+    path="/marketing/reports" element = { <MarketingReports /> } />
+
           {/* Employees */}
           <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/site-visits" element={<SiteVisitsPage />} />
