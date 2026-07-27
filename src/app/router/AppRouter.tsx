@@ -16,13 +16,14 @@ import AgentsPage from "../../features/marketing/pages/AgentsPage";
 import SubAgentsPage from "../../features/marketing/pages/SubAgentsPage";
 import HierarchyPage from "../../features/marketing/pages/HirerarchyPage";
 import MarketingReports from "../../features/marketing/pages/MarketingReports";
+import MediaLibraryPage from "../../features/media-library/pages/MediaLibraryPage";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>
-
+          <Route path="/media-library" element={<MediaLibraryPage />} />
           <Route path="/" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
 <Route
