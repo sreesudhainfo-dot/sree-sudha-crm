@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AppLayout from "../layouts/AppLayout";
+import MarketingEmployeesPage from "../../features/marketing/pages/MarketingEmployeesPage";
 
 import DashboardPage from "../../features/dashboard/pages/DashboardPage";
 import EmployeesPage from "../../features/employees/pages/EmployeesPage";
@@ -29,6 +30,7 @@ import AddEmployeePage from "../../features/employees/pages/AddEmployeePage";
 import EmployeesRolePage from "../../features/employees/pages/EmployeesRolePage";
 import EditEmployeePage from "../../features/employees/components/EditEmployeePage";
 
+import InactiveMarketingEmployeesPage from "../../features/marketing/pages/MarketingEmployeesPage";
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -38,12 +40,20 @@ export default function AppRouter() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/leads" element={<LeadsPage />} />
 <Route
+  path="/marketing/inactive-employees"
+  element={<InactiveMarketingEmployeesPage />}
+/>
+<Route
   path="/employees/new"
   element={<AddEmployeePage />}
 />
 <Route
     path="/customers"
     element={<CustomersPage />}
+/>
+<Route
+  path="/marketing/employees"
+  element={<MarketingEmployeesPage />}
 />
 <Route
   path="/employees/edit/:id"

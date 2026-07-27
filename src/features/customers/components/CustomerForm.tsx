@@ -4,6 +4,8 @@ import {
   createCustomer,
   updateCustomer,
 } from "../services/customer";
+import SearchSelect from "../../../components/common/SearchSelect";
+import { getEmployees } from "../../../services/employees";
 
 interface CustomerFormProps {
   editingCustomer?: Customer | null;
@@ -26,7 +28,9 @@ const initialState = {
   plot_number: "",
   plot_size: "",
   sale_amount: "",
+  
   booking_amount: "",
+  assigned_to: "",
   balance_amount: "",
   payment_status: "Pending" as PaymentStatus,
   agreement_date: "",
@@ -41,16 +45,25 @@ export default function CustomerForm({
 }: CustomerFormProps) {
   const [form, setForm] = useState(initialState);
   const [saving, setSaving] = useState(false);
+const [employees, setEmployees] = useState<any[]>([]);
+  
+useEffect(() => {
+  loadEmployees();
+}, []);
 
-  useEffect(() => {
+async function loadEmployees() {
+  const data = await getEmployees();
+  setEmployees(data);
+}
+useEffect(() => {
     if (!editingCustomer) {
       setForm(initialState);
       return;
     }
-
     setForm({
       customer_name: editingCustomer.customer_name,
       phone: editingCustomer.phone,
+      assigned_to: editingCustomer.assigned_to ?? "",
       alternate_phone: editingCustomer.alternate_phone ?? "",
       email: editingCustomer.email ?? "",
       project: editingCustomer.project,
@@ -174,7 +187,22 @@ export default function CustomerForm({
           required
           className="border rounded p-2"
         />
-
+<SearchSelect
+  label="Assigned Employee"
+  placeholder="Search employee..."
+  value={form.assigned_to}
+  onChange={(value) =>
+    setForm((prev) => ({
+      ...prev,
+      assigned_to: value,
+    }))
+  }
+  options={employees.map((emp) => ({
+    id: emp.id,
+    label: emp.full_name,
+    subLabel: emp.employee_id,
+  }))}
+/>
         <input
           name="plot_number"
           placeholder="Plot Number"

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { Lead, LeadSource, LeadStatus } from "../types/Lead";
 import { createLead, updateLead } from "../services/leads";
 
+import SearchSelect from "../../../components/common/SearchSelect";
+import { getEmployees } from "../../../services/employees";
 interface LeadFormProps {
   editingLead?: Lead | null;
   onSuccess: () => void;
@@ -53,9 +55,18 @@ export default function LeadForm({
   onSuccess,
   onCancel,
 }: LeadFormProps) {
+  const [employees, setEmployees] = useState<any[]>([]);
+
   const [form, setForm] = useState(initialState);
   const [saving, setSaving] = useState(false);
+useEffect(() => {
+  loadEmployees();
+}, []);
 
+async function loadEmployees() {
+  const data = await getEmployees();
+  setEmployees(data);
+}
   useEffect(() => {
     if (!editingLead) {
       setForm(initialState);
@@ -186,7 +197,22 @@ export default function LeadForm({
             <option key={source}>{source}</option>
           ))}
         </select>
-
+<SearchSelect
+  label="Assigned Employee"
+  placeholder="Search employee..."
+  value={form.assigned_to}
+  onChange={(value) =>
+    setForm((prev) => ({
+      ...prev,
+      assigned_to: value,
+    }))
+  }
+  options={employees.map((emp) => ({
+    id: emp.id,
+    label: emp.full_name,
+    subLabel: emp.employee_id,
+  }))}
+/>
         <input
           name="project"
           placeholder="Project"
