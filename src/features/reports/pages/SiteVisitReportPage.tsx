@@ -3,12 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import SiteVisitReportTable from "../components/SiteVisitReportTable";
 
 import {
-  getCustomers,
-  getMarketingEmployees,
+  getEmployees,
+  getSiteVisits,
 } from "../services/reports";
 
 export default function SiteVisitReportPage() {
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [siteVisits, setSiteVisits] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const [search, setSearch] = useState("");
 
@@ -18,13 +18,13 @@ export default function SiteVisitReportPage() {
 
   async function loadData() {
     try {
-      const [customerData, employeeData] =
+      const [visitData, employeeData] =
         await Promise.all([
-          getCustomers(),
-          getMarketingEmployees(),
+          getSiteVisits(),
+          getEmployees(),
         ]);
 
-      setCustomers(customerData);
+      setSiteVisits(visitData);
       setEmployees(employeeData);
     } catch (err) {
       console.error(err);
@@ -32,31 +32,27 @@ export default function SiteVisitReportPage() {
   }
 
   const report = useMemo(() => {
-    return customers
-      .filter((customer) => customer.site_visit_date)
-      .filter((customer) =>
-        customer.customer_name
-          .toLowerCase()
+    return siteVisits
+      .filter((visit) =>
+        visit.customer_name
+          ?.toLowerCase()
           .includes(search.toLowerCase())
       )
-      .map((customer) => {
+      .map((visit) => {
         const employee = employees.find(
-          (e) => e.id === customer.assigned_to
+          (e) => e.id === Number(visit.assigned_to)
         );
 
         return {
-          ...customer,
-          employeeName:
-            employee?.full_name ?? "-",
+          ...visit,
+          employeeName: employee?.full_name ?? "-",
         };
       });
-  }, [customers, employees, search]);
+  }, [siteVisits, employees, search]);
 
   return (
     <div className="space-y-6">
-
       <div className="flex items-center justify-between">
-
         <h1 className="text-3xl font-bold">
           Site Visit Report
         </h1>
@@ -65,17 +61,11 @@ export default function SiteVisitReportPage() {
           className="rounded-lg border px-4 py-2"
           placeholder="Search Customer..."
           value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
         />
-
       </div>
 
-      <SiteVisitReportTable
-        report={report}
-      />
-
+      <SiteVisitReportTable report={report} />
     </div>
   );
 }

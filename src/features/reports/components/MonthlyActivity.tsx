@@ -96,14 +96,14 @@ export default function MonthlyActivity({
           </h2>
         </div>
 
-        <div className="rounded-xl bg-white p-5 shadow">
+        {/* <div className="rounded-xl bg-white p-5 shadow">
           <p className="text-sm text-gray-500">
             Revenue
           </p>
           <h2 className="mt-2 text-2xl font-bold text-green-600">
             ₹{totalRevenue.toLocaleString()}
           </h2>
-        </div>
+        </div> */}
 
       </div>
 
@@ -121,9 +121,9 @@ export default function MonthlyActivity({
                 Employee
               </th>
 
-              <th className="p-3">
+              {/* <th className="p-3">
                 Role
-              </th>
+              </th> */}
 
               <th className="p-3">
                 Attendance
@@ -145,9 +145,9 @@ export default function MonthlyActivity({
                 Bookings
               </th>
 
-              <th className="p-3">
+              {/* <th className="p-3">
                 Revenue
-              </th>
+              </th> */}
 
             </tr>
 
@@ -163,12 +163,20 @@ export default function MonthlyActivity({
               >
 
                 <td className="p-3">
-                  {item.employee.full_name}
-                </td>
+  <div className="font-semibold">
+    {item.employee.full_name}
+  </div>
 
-                <td className="p-3 text-center">
+  {/* <div className="text-xs text-slate-500">
+    {item.employee.roles?.role_name ??
+      item.employee.role ??
+      "-"}
+  </div> */}
+</td>
+
+                {/* <td className="p-3 text-center">
                   {item.employee.role}
-                </td>
+                </td> */}
 
                 <td className="p-3 text-center">
                   {item.attendance}%
@@ -190,9 +198,9 @@ export default function MonthlyActivity({
                   {item.bookings}
                 </td>
 
-                <td className="p-3 text-center font-semibold text-green-600">
+                {/* <td className="p-3 text-center font-semibold text-green-600">
                   ₹{item.revenue.toLocaleString()}
-                </td>
+                </td> */}
 
               </tr>
 
@@ -208,7 +216,7 @@ export default function MonthlyActivity({
                 TOTAL
               </td>
 
-              <td></td>
+              {/* <td></td> */}
 
               <td className="text-center">
                 {averageAttendance}%
@@ -230,9 +238,9 @@ export default function MonthlyActivity({
                 {totalBookings}
               </td>
 
-              <td className="text-center text-green-600">
+              {/* <td className="text-center text-green-600">
                 ₹{totalRevenue.toLocaleString()}
-              </td>
+              </td> */}
 
             </tr>
 

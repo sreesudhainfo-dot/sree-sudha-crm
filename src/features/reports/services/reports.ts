@@ -1,9 +1,20 @@
 import { supabase } from "../../../lib/supabase";
 
-export async function getMarketingEmployees() {
+/* ===========================
+   EMPLOYEES
+=========================== */
+
+export async function getEmployees() {
   const { data, error } = await supabase
-    .from("marketing_employees")
-    .select("*")
+    .from("employees")
+    .select(
+      `
+      *,
+      roles (
+        role_name
+      )
+    `
+    )
     .order("full_name");
 
   if (error) throw error;
@@ -11,15 +22,23 @@ export async function getMarketingEmployees() {
   return data ?? [];
 }
 
-export async function getCustomers() {
+/* ===========================
+   ATTENDANCE
+=========================== */
+
+export async function getAttendance() {
   const { data, error } = await supabase
-    .from("customers")
+    .from("attendance")
     .select("*");
 
   if (error) throw error;
 
   return data ?? [];
 }
+
+/* ===========================
+   LEADS
+=========================== */
 
 export async function getLeads() {
   const { data, error } = await supabase
@@ -31,67 +50,105 @@ export async function getLeads() {
   return data ?? [];
 }
 
-export async function getAttendance() {
+/* ===========================
+   CUSTOMERS
+=========================== */
+
+export async function getCustomers() {
   const { data, error } = await supabase
-    .from("attendance")
+    .from("customers")
     .select("*");
 
   if (error) throw error;
 
   return data ?? [];
 }
+
+/* ===========================
+   SITE VISITS
+=========================== */
+
+export async function getSiteVisits() {
+  const { data, error } = await supabase
+    .from("site_visits")
+    .select("*");
+
+  if (error) throw error;
+
+  return data ?? [];
+}
+
+/* ===========================
+   EMPLOYEE PERFORMANCE
+=========================== */
+
 export async function getEmployeePerformance() {
   const [
     employees,
     customers,
     leads,
     attendance,
+    siteVisits,
   ] = await Promise.all([
-    getMarketingEmployees(),
+    getEmployees(),
     getCustomers(),
     getLeads(),
     getAttendance(),
+    getSiteVisits(),
   ]);
 
   return employees.map((employee: any) => {
-    const employeeLeads = leads.filter(
-      (lead: any) =>
-        lead.assigned_to === employee.id
+    // Leads
+    const employeeLeads = leads.filter((lead: any) => {
+  const assignedEmployee = employees.find(
+    (emp: any) => Number(emp.id) === Number(lead.assigned_to)
+  );
+
+  return assignedEmployee?.full_name === employee.full_name;
+});
+
+    // Customers
+    const employeeCustomers = customers.filter((customer: any) => {
+  const assignedEmployee = employees.find(
+    (emp: any) => Number(emp.id) === Number(customer.assigned_to)
+  );
+
+  return assignedEmployee?.full_name === employee.full_name;
+});
+
+    // Attendance
+    const employeeAttendance = attendance.filter((item: any) => {
+  const attendanceEmployee = employees.find(
+    (emp: any) => Number(emp.id) === Number(item.employee_id)
+  );
+
+  return attendanceEmployee?.full_name === employee.full_name;
+});
+
+    const presentDays = employeeAttendance.filter(
+      (item: any) => item.status === "Present"
+    ).length;
+
+    // Site Visits
+    const employeeSiteVisits = siteVisits.filter((visit: any) => {
+  const assignedEmployee = employees.find(
+    (emp: any) => Number(emp.id) === Number(visit.assigned_employee)
+  );
+
+  return assignedEmployee?.full_name === employee.full_name;
+});
+
+    // Bookings
+    const bookings = employeeCustomers.filter(
+      (customer: any) =>
+        Number(customer.booking_amount ?? 0) > 0
     );
 
-    const employeeCustomers =
-      customers.filter(
-        (customer: any) =>
-          customer.assigned_to === employee.id
-      );
-
-    const employeeAttendance =
-      attendance.filter(
-        (item: any) =>
-          item.employee_id === employee.id
-      );
-
-    const presentDays =
-      employeeAttendance.filter(
-        (item: any) =>
-          item.status === "Present"
-      ).length;
-
-    const bookings =
-      employeeCustomers.filter(
-        (customer: any) =>
-          customer.booking_amount
-      );
-
-    const bookingAmount =
-      bookings.reduce(
-        (sum: number, customer: any) =>
-          sum +
-          Number(
-            customer.booking_amount ?? 0
-          ),
-        0
-      );
+    const bookingAmount = bookings.reduce(
+      (sum: number, customer: any) =>
+        sum + Number(customer.booking_amount ?? 0),
+      0
+    );
 
     return {
       employee,
@@ -100,11 +157,11 @@ export async function getEmployeePerformance() {
 
       totalLeads: employeeLeads.length,
 
-      totalCustomers:
-        employeeCustomers.length,
+      totalCustomers: employeeCustomers.length,
 
-      totalBookings:
-        bookings.length,
+      totalSiteVisits: employeeSiteVisits.length,
+
+      totalBookings: bookings.length,
 
       bookingAmount,
 

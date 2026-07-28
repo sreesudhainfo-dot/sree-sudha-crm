@@ -61,37 +61,38 @@ const inactiveEmployees = employees.filter(
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
 
         <DashboardCard
-          title="Managers"
-          value={managers}
-          color="bg-blue-600"
-          path="/marketing/managers"
-        />
+  title="Managers"
+  value={managers}
+  color="bg-blue-600"
+  path="/marketing/employees?role=Manager"
+/>
 
-        <DashboardCard
-          title="Agents"
-          value={agents}
-          color="bg-green-600"
-          path="/marketing/agents"
-        />
+<DashboardCard
+  title="Agents"
+  value={agents}
+  color="bg-green-600"
+  path="/marketing/employees?role=Agent"
+/>
 
-        <DashboardCard
-          title="Sub Agents"
-          value={subAgents}
-          color="bg-orange-600"
-          path="/marketing/sub-agents"
-        />
+<DashboardCard
+  title="Sub Agents"
+  value={subAgents}
+  color="bg-orange-600"
+  path="/marketing/employees?role=Sub Agent"
+/>
 
-        <DashboardCard
-          title="Active Employees"
-          value={activeEmployees}
-          color="bg-purple-600"
-          path="/marketing/employees"
-        />
+<DashboardCard
+  title="Active Employees"
+  value={activeEmployees}
+  color="bg-purple-600"
+  path="/marketing/employees?status=Active"
+/>
+
 <DashboardCard
   title="Inactive Employees"
   value={inactiveEmployees}
   color="bg-red-600"
-  path="/marketing/inactive-employees"
+  path="/marketing/employees?status=Inactive"
 />
       </div>
 

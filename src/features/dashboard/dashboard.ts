@@ -1,20 +1,13 @@
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
-export interface DashboardSummary {
-  attendance: number;
-  leads: number;
-  visits: number;
-  bookings: number;
-}
-
-export async function getDashboardSummary(): Promise<DashboardSummary> {
+export async function getDashboardSummary() {
   const today = new Date().toISOString().split("T")[0];
 
   const [
-    attendanceResult,
-    leadsResult,
-    visitsResult,
-    bookingsResult,
+    { count: attendanceCount },
+    { count: leadsCount },
+    { count: visitCount },
+    { count: bookingCount },
   ] = await Promise.all([
     supabase
       .from("attendance")
@@ -42,10 +35,10 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
   ]);
 
   return {
-    attendance: attendanceResult.count ?? 0,
-    leads: leadsResult.count ?? 0,
-    visits: visitsResult.count ?? 0,
-    bookings: bookingsResult.count ?? 0,
+    attendance: attendanceCount ?? 0,
+    leads: leadsCount ?? 0,
+    visits: visitCount ?? 0,
+    bookings: bookingCount ?? 0,
   };
 }
 
@@ -54,7 +47,7 @@ export async function getRecentActivities() {
 
   const { data: employees } = await supabase
     .from("marketing_employees")
-    .select("full_name,created_at")
+    .select("full_name, created_at")
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -69,7 +62,7 @@ export async function getRecentActivities() {
 
   const { data: leads } = await supabase
     .from("leads")
-    .select("customer_name,created_at")
+    .select("customer_name, created_at")
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -84,7 +77,7 @@ export async function getRecentActivities() {
 
   const { data: visits } = await supabase
     .from("site_visits")
-    .select("customer_name,created_at")
+    .select("customer_name, created_at")
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -99,7 +92,7 @@ export async function getRecentActivities() {
 
   const { data: customers } = await supabase
     .from("customers")
-    .select("customer_name,created_at")
+    .select("customer_name, created_at")
     .order("created_at", { ascending: false })
     .limit(3);
 

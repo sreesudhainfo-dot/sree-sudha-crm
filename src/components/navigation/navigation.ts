@@ -2,7 +2,6 @@ import {
   FaChartPie,
   FaUsers,
   FaBullhorn,
-  FaPhoneAlt,
   FaUserTie,
   FaUserFriends,
   FaBuilding,
@@ -36,21 +35,7 @@ export const navigation = [
         icon: FaChartPie,
         path: "/marketing/dashboard",
       },
-      {
-        title: "Managers",
-        icon: FaUserTie,
-        path: "/marketing/managers",
-      },
-      {
-        title: "Agents",
-        icon: FaUsers,
-        path: "/marketing/agents",
-      },
-      {
-        title: "Sub Agents",
-        icon: FaUserFriends,
-        path: "/marketing/sub-agents",
-      },
+      
       {
         title: "Hierarchy",
         icon: FaBuilding,

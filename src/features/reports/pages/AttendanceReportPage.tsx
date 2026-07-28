@@ -4,7 +4,7 @@ import AttendanceReportTable from "../components/AttendanceReportTable";
 
 import {
   getAttendance,
-  getMarketingEmployees,
+  getEmployees,
 } from "../services/reports";
 
 export default function AttendanceReportPage() {
@@ -24,11 +24,12 @@ export default function AttendanceReportPage() {
   async function loadData() {
     try {
       const [
-        employeeData,
-        attendanceData,
-      ] = await Promise.all([
-        getMarketingEmployees(),
-        getAttendance(),
+  employeeData,
+  attendanceData,
+] = await Promise.all([
+  getEmployees(),
+  getAttendance(),
+
       ]);
 
       setEmployees(employeeData);
@@ -50,10 +51,10 @@ export default function AttendanceReportPage() {
       .map((employee) => {
 
         const records =
-          attendance.filter(
-            (a) =>
-              a.employee_id === employee.id
-          );
+  attendance.filter(
+    (a) =>
+      a.employee_id === employee.employee_id
+  );
 
         const present =
           records.filter(
