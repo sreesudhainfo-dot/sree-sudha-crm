@@ -6,43 +6,46 @@ export default function MonthlyActivity({
   report,
 }: Props) {
 
-  const totalEmployees = report.length;
+  /* =========================================
+   MONTHLY TOTALS
+========================================= */
 
-  const totalLeads = report.reduce(
-    (sum, item) => sum + item.leads,
-    0
-  );
+const totalEmployees = report.length;
+console.log(report[0].employee);
+const monthlyPresentDays = report.reduce(
+  (sum, item) => sum + item.presentDays,
+  0
+);
 
-  const totalCustomers = report.reduce(
-    (sum, item) => sum + item.customers,
-    0
-  );
+const monthlyAttendancePercentage =
+  report.length === 0
+    ? 0
+    : Math.round(
+        report.reduce(
+          (sum, item) => sum + item.attendance,
+          0
+        ) / report.length
+      );
 
-  const totalVisits = report.reduce(
-    (sum, item) => sum + item.siteVisits,
-    0
-  );
+const monthlyLeads = report.reduce(
+  (sum, item) => sum + item.leads,
+  0
+);
 
-  const totalBookings = report.reduce(
-    (sum, item) => sum + item.bookings,
-    0
-  );
+const monthlyCustomers = report.reduce(
+  (sum, item) => sum + item.customers,
+  0
+);
 
-  const totalRevenue = report.reduce(
-    (sum, item) => sum + item.revenue,
-    0
-  );
+const monthlySiteVisits = report.reduce(
+  (sum, item) => sum + item.siteVisits,
+  0
+);
 
-  const averageAttendance =
-    report.length === 0
-      ? 0
-      : Math.round(
-          report.reduce(
-            (sum, item) =>
-              sum + item.attendance,
-            0
-          ) / report.length
-        );
+const monthlyBookings = report.reduce(
+  (sum, item) => sum + item.bookings,
+  0
+);
 
   return (
     <div className="space-y-6">
@@ -65,7 +68,7 @@ export default function MonthlyActivity({
             Attendance
           </p>
           <h2 className="mt-2 text-3xl font-bold text-green-600">
-            {averageAttendance}%
+            {monthlyPresentDays} Days
           </h2>
         </div>
 
@@ -74,7 +77,7 @@ export default function MonthlyActivity({
             Leads
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            {totalLeads}
+            {monthlyLeads}
           </h2>
         </div>
 
@@ -83,7 +86,7 @@ export default function MonthlyActivity({
             Customers
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            {totalCustomers}
+            {monthlyCustomers}
           </h2>
         </div>
 
@@ -92,7 +95,7 @@ export default function MonthlyActivity({
             Site Visits
           </p>
           <h2 className="mt-2 text-3xl font-bold text-blue-600">
-            {totalVisits}
+            {monthlySiteVisits}
           </h2>
         </div>
 
@@ -154,59 +157,27 @@ export default function MonthlyActivity({
           </thead>
 
           <tbody>
+  {report.map((item) => {
 
-            {report.map((item) => (
+   console.log("Report:", report);
 
-              <tr
-                key={item.employee.id}
-                className="border-t"
-              >
+    return (
+      <tr
+        key={item.employee.id}
+        className="border-t"
+      >
+        <td className="p-3">
+          <div className="font-semibold">
+            {item.employee.full_name}
+          </div>
+        </td>
 
-                <td className="p-3">
-  <div className="font-semibold">
-    {item.employee.full_name}
-  </div>
+        {/* Rest of your columns */}
 
-  {/* <div className="text-xs text-slate-500">
-    {item.employee.roles?.role_name ??
-      item.employee.role ??
-      "-"}
-  </div> */}
-</td>
-
-                {/* <td className="p-3 text-center">
-                  {item.employee.role}
-                </td> */}
-
-                <td className="p-3 text-center">
-                  {item.attendance}%
-                </td>
-
-                <td className="p-3 text-center">
-                  {item.leads}
-                </td>
-
-                <td className="p-3 text-center">
-                  {item.customers}
-                </td>
-
-                <td className="p-3 text-center">
-                  {item.siteVisits}
-                </td>
-
-                <td className="p-3 text-center font-semibold">
-                  {item.bookings}
-                </td>
-
-                {/* <td className="p-3 text-center font-semibold text-green-600">
-                  ₹{item.revenue.toLocaleString()}
-                </td> */}
-
-              </tr>
-
-            ))}
-
-          </tbody>
+      </tr>
+    );
+  })}
+</tbody>
 
           <tfoot className="bg-slate-50 font-bold">
 
@@ -219,23 +190,23 @@ export default function MonthlyActivity({
               {/* <td></td> */}
 
               <td className="text-center">
-                {averageAttendance}%
+                {monthlyPresentDays} Days
               </td>
 
               <td className="text-center">
-                {totalLeads}
+                {monthlyLeads}
               </td>
 
               <td className="text-center">
-                {totalCustomers}
+                {monthlyCustomers}
               </td>
 
               <td className="text-center">
-                {totalVisits}
+                {monthlySiteVisits}
               </td>
 
               <td className="text-center">
-                {totalBookings}
+                {monthlyBookings}
               </td>
 
               {/* <td className="text-center text-green-600">

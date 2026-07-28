@@ -129,6 +129,9 @@ export default function CustomerTable({
               <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Phone</th>
               <th className="text-left p-3">Project</th>
+              <th className="text-left p-3">
+  Assigned Employee
+</th>
               <th className="text-left p-3">Plot</th>
               <th className="text-left p-3">Sale Amount</th>
               <th className="text-left p-3">Payment</th>
@@ -148,7 +151,9 @@ export default function CustomerTable({
                 <td className="p-3">{customer.phone}</td>
 
                 <td className="p-3">{customer.project}</td>
-
+<td className="p-3">
+  {customer.assigned_employee_name ?? "-"}
+</td>
                 <td className="p-3">{customer.plot_number}</td>
 
                 <td className="p-3">

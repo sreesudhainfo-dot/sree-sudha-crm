@@ -5,6 +5,7 @@ import type { Lead } from "../types/Lead";
 
 interface LeadTableProps {
   onEdit: (lead: Lead) => void;
+  
 }
 
 export default function LeadTable({ onEdit }: LeadTableProps) {
@@ -101,7 +102,9 @@ export default function LeadTable({ onEdit }: LeadTableProps) {
             <th className="text-left p-3">Source</th>
 
             <th className="text-left p-3">Project</th>
-
+<th className="text-left p-3">
+  Assigned Employee
+</th>
             <th className="text-left p-3">Status</th>
 
             <th className="text-left p-3">Actions</th>
@@ -125,7 +128,9 @@ export default function LeadTable({ onEdit }: LeadTableProps) {
               <td className="p-3">{lead.source}</td>
 
               <td className="p-3">{lead.project}</td>
-
+<td className="p-3">
+  {lead.assigned_employee_name ?? "-"}
+</td>
               <td className="p-3">
                 <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-sm">
                   {lead.status}

@@ -46,9 +46,9 @@ export default function EmployeePerformanceTable({
                 Bookings
               </th>
 
-              <th className="p-3">
+              {/* <th className="p-3">
                 Revenue
-              </th>
+              </th> */}
 
               <th className="p-3">
                 Action
@@ -72,29 +72,28 @@ export default function EmployeePerformanceTable({
                 </td>
 
                 <td className="p-3 text-center">
-                  {row.employee.role}
-                </td>
+  {row.employee.roles?.role_name ?? "-"}
+</td>
 
                 <td className="p-3 text-center">
                   {row.attendance}
                 </td>
 
                 <td className="p-3 text-center">
-                  {row.totalLeads}
+                  {row.leads}
                 </td>
 
                 <td className="p-3 text-center">
-                  {row.totalCustomers}
+                  {row.customers}
                 </td>
 
                 <td className="p-3 text-center">
-                  {row.totalBookings}
+                  {row.bookings}
                 </td>
 
-                <td className="p-3 text-center">
-                  ₹
-                  {row.bookingAmount.toLocaleString()}
-                </td>
+                {/* <td className="p-3 text-center">
+                  ₹{(row.revenue ?? 0).toLocaleString()}
+                </td> */}
 
                 <td className="p-3 text-center">
 

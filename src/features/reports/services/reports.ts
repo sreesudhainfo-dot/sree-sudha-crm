@@ -1,30 +1,47 @@
 import { supabase } from "../../../lib/supabase";
 
-/* ===========================
+/* ==========================================
+   CURRENT MONTH HELPER
+========================================== */
+
+function isCurrentMonth(date: string | null | undefined) {
+  if (!date) return false;
+
+  const d = new Date(date);
+  const now = new Date();
+
+  return (
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth()
+  );
+}
+
+/* ==========================================
    EMPLOYEES
-=========================== */
+========================================== */
 
 export async function getEmployees() {
   const { data, error } = await supabase
     .from("employees")
-    .select(
-      `
+    .select(`
       *,
-      roles (
+      roles!employees_role_id_fkey (
+        id,
         role_name
       )
-    `
-    )
+    `)
     .order("full_name");
 
   if (error) throw error;
 
+  console.log(data);
+
   return data ?? [];
 }
 
-/* ===========================
+/* ==========================================
    ATTENDANCE
-=========================== */
+========================================== */
 
 export async function getAttendance() {
   const { data, error } = await supabase
@@ -36,9 +53,9 @@ export async function getAttendance() {
   return data ?? [];
 }
 
-/* ===========================
+/* ==========================================
    LEADS
-=========================== */
+========================================== */
 
 export async function getLeads() {
   const { data, error } = await supabase
@@ -50,9 +67,9 @@ export async function getLeads() {
   return data ?? [];
 }
 
-/* ===========================
+/* ==========================================
    CUSTOMERS
-=========================== */
+========================================== */
 
 export async function getCustomers() {
   const { data, error } = await supabase
@@ -64,9 +81,9 @@ export async function getCustomers() {
   return data ?? [];
 }
 
-/* ===========================
+/* ==========================================
    SITE VISITS
-=========================== */
+========================================== */
 
 export async function getSiteVisits() {
   const { data, error } = await supabase
@@ -78,94 +95,139 @@ export async function getSiteVisits() {
   return data ?? [];
 }
 
-/* ===========================
+/* ==========================================
    EMPLOYEE PERFORMANCE
-=========================== */
+========================================== */
 
 export async function getEmployeePerformance() {
+
   const [
     employees,
-    customers,
-    leads,
     attendance,
+    leads,
+    customers,
     siteVisits,
   ] = await Promise.all([
     getEmployees(),
-    getCustomers(),
-    getLeads(),
     getAttendance(),
+    getLeads(),
+    getCustomers(),
     getSiteVisits(),
   ]);
 
   return employees.map((employee: any) => {
-    // Leads
-    const employeeLeads = leads.filter((lead: any) => {
-  const assignedEmployee = employees.find(
-    (emp: any) => Number(emp.id) === Number(lead.assigned_to)
-  );
+        /* -------------------------
+       ATTENDANCE (Current Month)
+    -------------------------- */
 
-  return assignedEmployee?.full_name === employee.full_name;
-});
-
-    // Customers
-    const employeeCustomers = customers.filter((customer: any) => {
-  const assignedEmployee = employees.find(
-    (emp: any) => Number(emp.id) === Number(customer.assigned_to)
-  );
-
-  return assignedEmployee?.full_name === employee.full_name;
-});
-
-    // Attendance
-    const employeeAttendance = attendance.filter((item: any) => {
-  const attendanceEmployee = employees.find(
-    (emp: any) => Number(emp.id) === Number(item.employee_id)
-  );
-
-  return attendanceEmployee?.full_name === employee.full_name;
-});
+    const employeeAttendance = attendance.filter(
+      (item: any) =>
+        item.employee_id === employee.employee_id &&
+        isCurrentMonth(item.attendance_date)
+    );
 
     const presentDays = employeeAttendance.filter(
       (item: any) => item.status === "Present"
     ).length;
 
-    // Site Visits
-    const employeeSiteVisits = siteVisits.filter((visit: any) => {
-  const assignedEmployee = employees.find(
-    (emp: any) => Number(emp.id) === Number(visit.assigned_employee)
-  );
+    const totalAttendanceDays =
+      employeeAttendance.length;
 
-  return assignedEmployee?.full_name === employee.full_name;
-});
+    const attendancePercentage =
+      totalAttendanceDays === 0
+        ? 0
+        : presentDays
+    /* -------------------------
+       LEADS (Current Month)
+    -------------------------- */
 
-    // Bookings
-    const bookings = employeeCustomers.filter(
-      (customer: any) =>
-        Number(customer.booking_amount ?? 0) > 0
+    const employeeLeads = leads.filter(
+      (lead: any) =>
+        Number(lead.assigned_to) ===
+          Number(employee.id) &&
+        isCurrentMonth(lead.created_at)
     );
 
-    const bookingAmount = bookings.reduce(
-      (sum: number, customer: any) =>
-        sum + Number(customer.booking_amount ?? 0),
-      0
-    );
+    /* -------------------------
+       CUSTOMERS (Current Month)
+       Customer -> Lead -> Employee
+    -------------------------- */
 
-    return {
-      employee,
+    const employeeCustomers =
+      customers.filter((customer: any) => {
 
-      attendance: presentDays,
+        const lead = leads.find(
+          (l: any) =>
+            l.id === customer.lead_id
+        );
 
-      totalLeads: employeeLeads.length,
+        if (!lead) return false;
 
-      totalCustomers: employeeCustomers.length,
+        return (
+          Number(lead.assigned_to) ===
+            Number(employee.id) &&
+          isCurrentMonth(
+            customer.created_at
+          )
+        );
+      });
 
-      totalSiteVisits: employeeSiteVisits.length,
+    /* -------------------------
+       SITE VISITS (Current Month)
+    -------------------------- */
 
-      totalBookings: bookings.length,
+    const employeeSiteVisits =
+      siteVisits.filter(
+        (visit: any) =>
+          Number(
+            visit.assigned_employee
+          ) === Number(employee.id) &&
+          isCurrentMonth(
+            visit.visit_date
+          )
+      );
 
-      bookingAmount,
+    /* -------------------------
+       BOOKINGS
+    -------------------------- */
 
-      customers: employeeCustomers,
-    };
+    const bookings =
+      employeeCustomers.filter(
+        (customer: any) =>
+          Number(
+            customer.booking_amount ?? 0
+          ) > 0
+      );
+
+    const bookingAmount =
+      bookings.reduce(
+        (
+          sum: number,
+          booking: any
+        ) =>
+          sum +
+          Number(
+            booking.booking_amount ??
+              0
+          ),
+        0
+      );
+      return {
+  employee,
+
+  attendance: attendancePercentage,
+
+  presentDays,
+
+  leads: employeeLeads.length,
+
+  customers: employeeCustomers.length,
+
+  siteVisits: employeeSiteVisits.length,
+
+  bookings: bookings.length,
+
+  revenue: bookingAmount,
+};
   });
 }
