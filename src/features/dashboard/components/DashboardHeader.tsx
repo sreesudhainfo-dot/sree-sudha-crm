@@ -1,5 +1,10 @@
+import { useOutletContext } from "react-router-dom";
 
 export default function DashboardHeader() {
+
+  const { search } =
+    useOutletContext<{ search: string }>();
+
   const today = new Date();
 
   const formattedDate = today.toLocaleDateString(
@@ -19,9 +24,10 @@ export default function DashboardHeader() {
   if (hour < 12) greeting = "Good Morning";
   else if (hour < 17) greeting = "Good Afternoon";
 
+  console.log(search);
+
   return (
     <div className="rounded-2xl bg-gradient-to-r from-blue-700 to-blue-500 p-8 text-white shadow-lg">
-
       <h1 className="text-4xl font-bold">
         {greeting}, Admin 👋
       </h1>
@@ -33,7 +39,6 @@ export default function DashboardHeader() {
       <p className="mt-4 text-sm text-blue-200">
         {formattedDate}
       </p>
-
     </div>
   );
 }

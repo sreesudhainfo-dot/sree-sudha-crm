@@ -92,9 +92,9 @@ export const navigation = [
     icon: FaChartBar,
     path: "/reports",
   },
-  {
-    title: "Settings",
-    icon: FaCog,
-    path: "/settings",
-  },
+  // {
+  //   title: "Settings",
+  //   icon: FaCog,
+  //   path: "/settings",
+  // },
 ];

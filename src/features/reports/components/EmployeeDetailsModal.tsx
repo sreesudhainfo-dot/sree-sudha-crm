@@ -1,3 +1,5 @@
+import * as XLSX from "xlsx";
+
 interface Props {
   employee: any;
   attendance: any[];
@@ -21,7 +23,97 @@ export default function EmployeeDetailsModal({
       Number(customer.booking_amount ?? 0),
     0
   );
+function handleDownload() {
+  if (!employee) return;
 
+  const rows: any[][] = [];
+
+  // ===== Title =====
+  rows.push([employee.full_name]);
+  rows.push([]);
+
+  // ===== Summary =====
+  rows.push(["Customers", customers.length]);
+  rows.push([
+    "Attendance",
+    attendance.filter((a) => a.status === "Present").length,
+  ]);
+  rows.push(["Revenue", `₹${totalRevenue.toLocaleString()}`]);
+  rows.push(["Leads", leads.length]);
+
+  rows.push([]);
+  rows.push(["LEADS"]);
+  rows.push([]);
+
+  // Lead headers
+  rows.push([
+    "Date",
+    "Lead ID",
+    "Customer",
+    "Phone",
+    "Source",
+    "Status",
+  ]);
+
+  // Lead rows
+  leads.forEach((lead: any) => {
+    rows.push([
+      lead.site_visit_date
+        ? new Date(lead.site_visit_date).toLocaleDateString("en-GB")
+        : "-",
+      lead.lead_id,
+      lead.customer_name,
+      lead.phone,
+      lead.source,
+      lead.status,
+    ]);
+  });
+
+  rows.push([]);
+  rows.push(["CUSTOMERS"]);
+  rows.push([]);
+
+  // Customer headers
+  rows.push([
+    "Date",
+    "Customer",
+    "Phone",
+    "Status",
+    "Booking",
+    "Amount",
+  ]);
+
+  // Customer rows
+  customers.forEach((customer: any) => {
+    rows.push([
+      customer.registration_date
+        ? new Date(customer.registration_date).toLocaleDateString("en-GB")
+        : "-",
+      customer.customer_name,
+      customer.phone,
+      customer.payment_status,
+      customer.booking_amount ? "Booked" : "-",
+      customer.booking_amount
+        ? `₹${Number(customer.booking_amount).toLocaleString()}`
+        : "-",
+    ]);
+  });
+
+  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Employee Report"
+  );
+
+  XLSX.writeFile(
+    workbook,
+    `${employee.full_name}_Report.xlsx`
+  );
+}
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 
@@ -41,12 +133,23 @@ export default function EmployeeDetailsModal({
 
           </div>
 
-          <button
-            onClick={onClose}
-            className="rounded-lg bg-red-600 px-5 py-2 text-white"
-          >
-            Close
-          </button>
+          <div className="flex justify-end gap-3 mt-6">
+
+  <button
+    onClick={handleDownload}
+    className="rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700"
+  >
+    Download Report
+  </button>
+
+  <button
+    onClick={onClose}
+    className="rounded-lg border px-5 py-2"
+  >
+    Close
+  </button>
+
+</div>
 
         </div>
 

@@ -4,6 +4,7 @@ interface Props {
 
 export default function AttendanceReportTable({
   report,
+  
 }: Props) {
 
   return (
@@ -62,8 +63,8 @@ export default function AttendanceReportTable({
               </td>
 
               <td className="p-3 text-center">
-                {row.employee.role}
-              </td>
+  {row.employee.roles?.role_name}
+</td>
 
               <td className="p-3 text-center text-green-600">
                 {row.present}

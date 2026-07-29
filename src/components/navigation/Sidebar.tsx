@@ -4,7 +4,7 @@ import { navigation } from "./navigation";
 
 export default function Sidebar() {
   return (
-    <aside className="w-72 border-r bg-white">
+    <aside className="h-screen w-72 flex-shrink-0 overflow-y-auto border-r bg-white">
       <Logo />
 
       <div className="space-y-2 p-4">

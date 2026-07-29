@@ -452,6 +452,8 @@ import {
   updateMarketingEmployee,
   getManagersDropdown,
   getAgents,
+  generateAgentId,
+  generateSubAgentId,
 } from "../services/marketing";
 
 import type {
@@ -471,7 +473,7 @@ export default function MarketingEmployeeForm({
 }: Props) {
   const [employeeId, setEmployeeId] = useState("");
 const [fullName, setFullName] = useState("");
-const [designation, setDesignation] = useState("");
+// const [designation, setDesignation] = useState("");
 
 const [role, setRole] =
   useState<MarketingRole>("Manager");
@@ -521,7 +523,7 @@ useEffect(() => {
 
   setEmployeeId(employee.employee_id);
   setFullName(employee.full_name);
-  setDesignation(employee.designation);
+  // setDesignation(employee.designation);
 
   setRole(employee.role);
 
@@ -541,8 +543,8 @@ async function handleSubmit(
 
   if (
     !employeeId ||
-    !fullName ||
-    !designation
+    !fullName 
+    // !designation
   ) {
     alert("Please fill all required fields.");
     return;
@@ -567,18 +569,17 @@ async function handleSubmit(
 
     reportingTo = managerId;
   }
-
-  const payload = {
-    employee_id: employeeId,
-    full_name: fullName,
-    designation,
-    role,
-    manager_id: reportingTo,
-    phone,
-    email,
-    joining_date: joiningDate,
-    status,
-  };
+const payload = {
+  employee_id: employeeId,
+  full_name: fullName,
+  designation: role, // automatically set
+  role,
+  manager_id: reportingTo,
+  phone,
+  email,
+  joining_date: joiningDate,
+  status,
+};
 
   try {
     if (employee) {
@@ -610,7 +611,7 @@ function resetForm() {
 
   setFullName("");
 
-  setDesignation("");
+  // setDesignation("");
 
   setRole("Manager");
 
@@ -638,13 +639,11 @@ return (
     <div className="grid grid-cols-2 gap-4">
 
       <input
-        className="rounded-lg border p-3"
-        placeholder="Employee ID"
-        value={employeeId}
-        onChange={(e) =>
-          setEmployeeId(e.target.value)
-        }
-      />
+  className="rounded-lg border bg-gray-100 p-3"
+  placeholder="Employee ID"
+  value={employeeId}
+  readOnly
+/>
 
       <input
         className="rounded-lg border p-3"
@@ -655,14 +654,14 @@ return (
         }
       />
 
-      <input
+      {/* <input
         className="rounded-lg border p-3"
         placeholder="Designation"
         value={designation}
         onChange={(e) =>
           setDesignation(e.target.value)
         }
-      />
+      /> */}
 
       <select
         className="rounded-lg border p-3"
@@ -695,9 +694,18 @@ return (
         <select
           className="rounded-lg border p-3"
           value={managerId}
-          onChange={(e) =>
-            setManagerId(e.target.value)
-          }
+          onChange={async (e) => {
+  const id = e.target.value;
+
+  setManagerId(id);
+
+  if (!id) return;
+
+  const generated =
+    await generateAgentId(id);
+
+  setEmployeeId(generated);
+}}
         >
           <option value="">
             Select Manager
@@ -715,13 +723,22 @@ return (
       )}
 
       {role === "Sub Agent" && (
-        <select
-          className="rounded-lg border p-3"
-          value={managerId}
-          onChange={(e) =>
-            setManagerId(e.target.value)
-          }
-        >
+  <select
+    className="rounded-lg border p-3"
+    value={managerId}
+    onChange={async (e) => {
+      const id = e.target.value;
+
+      setManagerId(id);
+
+      if (!id) return;
+
+      const generatedId =
+        await generateSubAgentId(id);
+
+      setEmployeeId(generatedId);
+    }}
+  >
           <option value="">
             Select Agent
           </option>

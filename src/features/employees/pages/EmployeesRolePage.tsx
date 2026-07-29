@@ -68,13 +68,13 @@ export default function EmployeesRolePage() {
 
       </div>
 
-      <EmployeeForm
+      {/* <EmployeeForm
         employee={selectedEmployee}
         onEmployeeAdded={() => {
           loadEmployees();
           setSelectedEmployee(null);
         }}
-      />
+      /> */}
 
       <EmployeeTable
         employees={filteredEmployees}

@@ -1,6 +1,7 @@
 import { supabase } from "../../../lib/supabase";
 import type { MarketingEmployee } from "../types/MarketingEmployee";
 
+
 /* --------------------------
    GET ALL
 -------------------------- */
@@ -61,11 +62,83 @@ export async function getAgents() {
 
   return data as MarketingEmployee[];
 }
+export async function generateAgentId(managerId: string) {
+  // Get manager employee ID
+  const { data: manager, error: managerError } = await supabase
+    .from("marketing_employees")
+    .select("employee_id")
+    .eq("id", managerId)
+    .single();
 
+  if (managerError) throw managerError;
+
+  // Get all agents under this manager
+  const { data: agents, error: agentError } = await supabase
+    .from("marketing_employees")
+    .select("employee_id")
+    .eq("role", "Agent")
+    .eq("manager_id", managerId);
+
+  if (agentError) throw agentError;
+
+  let highest = 0;
+
+  agents?.forEach((agent) => {
+    const match = agent.employee_id.match(/AG(\d+)$/);
+
+    if (match) {
+      const number = parseInt(match[1], 10);
+
+      if (number > highest) {
+        highest = number;
+      }
+    }
+  });
+
+  const nextNumber = String(highest + 1).padStart(2, "0");
+
+  return `${manager.employee_id}-AG${nextNumber}`;
+}
 /* --------------------------
    SUB AGENTS
 -------------------------- */
+export async function generateSubAgentId(agentId: string) {
+  // Get selected Agent employee ID
+  const { data: agent, error: agentError } = await supabase
+    .from("marketing_employees")
+    .select("employee_id")
+    .eq("id", agentId)
+    .single();
 
+  if (agentError) throw agentError;
+
+  // Get all Sub Agents under this Agent
+  const { data: subAgents, error: subAgentError } = await supabase
+    .from("marketing_employees")
+    .select("employee_id")
+    .eq("role", "Sub Agent")
+    .eq("manager_id", agentId);
+
+  if (subAgentError) throw subAgentError;
+
+  let highest = 0;
+
+  subAgents?.forEach((subAgent) => {
+    const match = subAgent.employee_id.match(/SA(\d+)$/);
+
+    if (match) {
+      const number = parseInt(match[1], 10);
+
+      if (number > highest) {
+        highest = number;
+      }
+    }
+  });
+
+  const nextNumber = String(highest + 1).padStart(2, "0");
+
+  return `${agent.employee_id}-SA${nextNumber}`;
+}
 export async function getSubAgents() {
   const { data, error } = await supabase
     .from("marketing_employees")
@@ -77,7 +150,6 @@ export async function getSubAgents() {
 
   return data as MarketingEmployee[];
 }
-
 /* --------------------------
    CREATE
 -------------------------- */
