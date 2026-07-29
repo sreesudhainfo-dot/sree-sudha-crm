@@ -6,9 +6,16 @@ import type { Customer } from "../types/Customer";
  */
 export async function getCustomers(): Promise<Customer[]> {
   const { data, error } = await supabase
-    .from("customers")
-    .select("*")
-    .order("created_at", { ascending: false });
+  .from("customers")
+  .select(`
+    *,
+    employees!customers_assigned_to_fkey (
+      full_name
+    )
+  `)
+  .order("created_at", { ascending: false });
+
+console.log(data);
 
   if (error) throw error;
 
@@ -56,6 +63,9 @@ export async function updateCustomer(
   id: string,
   updates: Partial<Customer>
 ): Promise<Customer> {
+
+  console.log("Updating:", updates);
+
   const { data, error } = await supabase
     .from("customers")
     .update({
@@ -63,12 +73,16 @@ export async function updateCustomer(
       updated_at: new Date().toISOString(),
     })
     .eq("id", id)
-    .select()
-    .single();
+    .select();
 
-  if (error) throw error;
+ console.log("assigned_to after update:", data?.[0]?.assigned_to);
 
-  return data as Customer;
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  return data![0] as Customer;
 }
 
 /**

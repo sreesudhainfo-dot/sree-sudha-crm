@@ -1,12 +1,16 @@
 interface Props {
   employee: any;
+  attendance: any[];
+  leads: any[];
   customers: any[];
   onClose: () => void;
 }
 
 export default function EmployeeDetailsModal({
   employee,
-  customers,
+  attendance,
+  leads,
+  customers = [],
   onClose,
 }: Props) {
   if (!employee) return null;
@@ -63,15 +67,11 @@ export default function EmployeeDetailsModal({
           <div className="rounded-lg bg-slate-100 p-4">
 
             <p className="text-sm text-slate-500">
-              Bookings
+              Attendance
             </p>
 
             <h3 className="text-2xl font-bold">
-              {
-                customers.filter(
-                  (c) => c.booking_amount
-                ).length
-              }
+              {attendance.filter(a => a.status === "Present").length}
             </h3>
 
           </div>
@@ -92,36 +92,81 @@ export default function EmployeeDetailsModal({
           <div className="rounded-lg bg-slate-100 p-4">
 
             <p className="text-sm text-slate-500">
-              Conversion
+              Leads
             </p>
 
             <h3 className="text-2xl font-bold">
 
-              {customers.length === 0
-                ? 0
-                : (
-                    (customers.filter(
-                      (c) =>
-                        c.booking_amount
-                    ).length /
-                      customers.length) *
-                    100
-                  ).toFixed(1)}
-
-              %
+              {leads.length}
 
             </h3>
 
           </div>
 
         </div>
+<h3 className="mb-3 text-xl font-bold">
+  Leads
+</h3>
 
+<table className="mb-8 min-w-full">
+  <thead className="bg-slate-100">
+    <tr>
+      <th className="p-3 text-left">Date</th>
+      <th className="p-3 text-left">Lead ID</th>
+      <th className="p-3 text-left">Customer</th>
+      <th className="p-3">Phone</th>
+      <th className="p-3">Source</th>
+      <th className="p-3">Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {leads.map((lead: any) => (
+      <tr key={lead.id} className="border-t">
+        <td className="p-3">
+  {lead.site_visit_date
+    ? new Date(lead.site_visit_date).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      )
+    : "-"}
+</td>
+        <td className="p-3">{lead.lead_id}</td>
+        <td className="p-3">{lead.customer_name}</td>
+        <td className="p-3">{lead.phone}</td>
+        <td className="p-3">{lead.source}</td>
+        <td className="p-3">{lead.status}</td>
+      </tr>
+    ))}
+
+    {leads.length === 0 && (
+      <tr>
+        <td
+          colSpan={5}
+          className="p-4 text-center text-slate-500"
+        >
+          No leads found
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
+<h3 className="mb-3 text-xl font-bold">
+  Customers
+</h3>
         <table className="min-w-full">
 
           <thead className="bg-slate-100">
 
             <tr>
-
+<th className="p-3 text-left">
+                Date
+              </th>
               <th className="p-3 text-left">
                 Customer
               </th>
@@ -154,7 +199,18 @@ export default function EmployeeDetailsModal({
                 key={customer.id}
                 className="border-t"
               >
-
+<td className="p-3">
+  {customer.registration_date
+    ? new Date(customer.registration_date).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      )
+    : "-"}
+</td>
                 <td className="p-3">
                   {customer.customer_name}
                 </td>
@@ -164,7 +220,7 @@ export default function EmployeeDetailsModal({
                 </td>
 
                 <td className="p-3">
-                  {customer.status}
+                  {customer.payment_status}
                 </td>
 
                 <td className="p-3">

@@ -40,7 +40,7 @@ export default function SiteVisitReportPage() {
       )
       .map((visit) => {
         const employee = employees.find(
-          (e) => e.id === Number(visit.assigned_to)
+          (e) => e.id === Number(visit.assigned_employee)
         );
 
         return {

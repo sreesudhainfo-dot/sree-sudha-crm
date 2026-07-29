@@ -153,24 +153,11 @@ export async function getEmployeePerformance() {
        Customer -> Lead -> Employee
     -------------------------- */
 
-    const employeeCustomers =
-      customers.filter((customer: any) => {
-
-        const lead = leads.find(
-          (l: any) =>
-            l.id === customer.lead_id
-        );
-
-        if (!lead) return false;
-
-        return (
-          Number(lead.assigned_to) ===
-            Number(employee.id) &&
-          isCurrentMonth(
-            customer.created_at
-          )
-        );
-      });
+    const employeeCustomers = customers.filter(
+  (customer: any) =>
+    Number(customer.assigned_to) === Number(employee.id) &&
+    isCurrentMonth(customer.created_at)
+);
 
     /* -------------------------
        SITE VISITS (Current Month)
@@ -215,19 +202,21 @@ export async function getEmployeePerformance() {
       return {
   employee,
 
-  attendance: attendancePercentage,
-
-  presentDays,
+  attendance: presentDays,
 
   leads: employeeLeads.length,
 
   customers: employeeCustomers.length,
 
-  siteVisits: employeeSiteVisits.length,
-
   bookings: bookings.length,
 
-  revenue: bookingAmount,
+  // revenue,
+
+  attendanceList: employeeAttendance,
+
+  leadList: employeeLeads,
+
+  customerList: employeeCustomers,
 };
   });
 }

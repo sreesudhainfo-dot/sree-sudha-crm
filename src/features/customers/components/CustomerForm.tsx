@@ -99,22 +99,25 @@ useEffect(() => {
 
     try {
       const customerData = {
-        customer_name: form.customer_name,
-        phone: form.phone,
-        alternate_phone: form.alternate_phone || undefined,
-        email: form.email || undefined,
-        project: form.project,
-        plot_number: form.plot_number,
-        plot_size: form.plot_size,
-        sale_amount: Number(form.sale_amount),
-        booking_amount: Number(form.booking_amount),
-        balance_amount: Number(form.balance_amount),
-        payment_status: form.payment_status,
-        agreement_date: form.agreement_date || undefined,
-        registration_date: form.registration_date || undefined,
-        remarks: form.remarks || undefined,
-      };
+  customer_name: form.customer_name,
+  phone: form.phone,
+  alternate_phone: form.alternate_phone || undefined,
+  email: form.email || undefined,
+  project: form.project,
+  plot_number: form.plot_number,
+  plot_size: form.plot_size,
+  sale_amount: Number(form.sale_amount),
+  booking_amount: Number(form.booking_amount),
+  balance_amount: Number(form.balance_amount),
 
+  assigned_to: form.assigned_to || undefined,
+
+  payment_status: form.payment_status,
+  agreement_date: form.agreement_date || undefined,
+  registration_date: form.registration_date || undefined,
+  remarks: form.remarks || undefined,
+};
+console.log(customerData);
       if (editingCustomer) {
         await updateCustomer(editingCustomer.id, customerData);
       } else {
@@ -140,6 +143,7 @@ useEffect(() => {
       onSubmit={handleSubmit}
       className="bg-white rounded-lg shadow p-6 space-y-4"
     >
+      
       <h2 className="text-xl font-semibold">
         {editingCustomer ? "Edit Customer" : "Add Customer"}
       </h2>

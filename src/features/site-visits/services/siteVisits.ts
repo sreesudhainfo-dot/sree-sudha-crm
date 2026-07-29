@@ -1,9 +1,34 @@
+import { supabase } from "../../../lib/supabase";
 import { BaseCrudService } from "../../../services/BaseCrudService";
 import type { SiteVisit } from "../types/SiteVisit";
 
-export const siteVisitService = new BaseCrudService<SiteVisit>("site_visits");
+export const siteVisitService =
+  new BaseCrudService<SiteVisit>("site_visits");
 
-// Optional helper functions
+export async function getSiteVisits() {
+  const [{ data: visits, error: visitError }, { data: employees, error: employeeError }] =
+    await Promise.all([
+      supabase
+        .from("site_visits")
+        .select("*")
+        .order("created_at", { ascending: false }),
+
+      supabase
+        .from("employees")
+        .select("id, full_name"),
+    ]);
+
+  if (visitError) throw visitError;
+  if (employeeError) throw employeeError;
+
+  return (visits ?? []).map((visit: any) => ({
+    ...visit,
+    employeeName:
+      employees?.find(
+        (emp: any) => Number(emp.id) === Number(visit.assigned_employee)
+      )?.full_name ?? "-",
+  }));
+}
 
 export async function completeVisit(id: string) {
   return siteVisitService.update(id, {

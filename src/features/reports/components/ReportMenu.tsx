@@ -26,16 +26,16 @@ const reports = [
     path: "/reports/bookings",
     color: "bg-pink-600",
   },
-  {
-    title: "Revenue Report",
-    path: "/reports/revenue",
-    color: "bg-emerald-600",
-  },
-  {
-    title: "Monthly Activity",
-    path: "/reports/monthly-activity",
-    color: "bg-slate-700",
-  },
+  // {
+  //   title: "Revenue Report",
+  //   path: "/reports/revenue",
+  //   color: "bg-emerald-600",
+  // },
+  // {
+  //   title: "Monthly Activity",
+  //   path: "/reports/monthly-activity",
+  //   color: "bg-slate-700",
+  // },
 ];
 
 export default function ReportMenu() {

@@ -70,7 +70,7 @@ export default function CustomerAssignmentTable({
               </td>
 
               <td className="p-3 text-center">
-                {customer.status}
+                {customer.payment_status}
               </td>
 
               <td className="p-3 text-center">

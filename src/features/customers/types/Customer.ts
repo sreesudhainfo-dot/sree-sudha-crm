@@ -16,6 +16,8 @@ export interface Customer {
 
   assigned_to?: string;
 
+  assigned_employee_name?: string;
+
   alternate_phone?: string;
 
   email?: string;
@@ -38,15 +40,12 @@ export interface Customer {
 
   registration_date?: string;
 
-  customer_plot_number?:string;
-
-customer_project?:string;
   remarks?: string;
 
   created_at: string;
 
   updated_at: string;
-
-  assigned_employee_name?: string;
-  
+  employees?: {
+  full_name: string;
+};
 }

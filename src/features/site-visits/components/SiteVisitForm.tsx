@@ -144,10 +144,10 @@ setEmployees(employeeData);
       }
 
       onSuccess();
-    } catch (err) {
-      console.error(err);
-      alert("Unable to save site visit.");
-    } finally {
+    } catch (error: any) {
+  console.error("Supabase Error:", error);
+  alert(error.message);
+} finally {
       setLoading(false);
     }
   }

@@ -120,12 +120,12 @@ export default function EmployeePerformanceTable({
 
       {selectedEmployee && (
         <EmployeeDetailsModal
-          employee={selectedEmployee.employee}
-          customers={selectedEmployee.customers}
-          onClose={() =>
-            setSelectedEmployee(null)
-          }
-        />
+  employee={selectedEmployee.employee}
+  attendance={selectedEmployee.attendanceList}
+  leads={selectedEmployee.leadList}
+  customers={selectedEmployee.customerList}
+  onClose={() => setSelectedEmployee(null)}
+/>
       )}
     </>
   );

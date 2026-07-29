@@ -73,13 +73,24 @@ export default function BookingReportTable({
               </td>
 
               <td className="p-3 text-center">
-                {item.conversion_date ??
-                  "-"}
-              </td>
+  {item.registration_date ??
+    item.agreement_date ??
+    "-"}
+</td>
 
               <td className="p-3 text-center">
-                {item.status}
-              </td>
+  <span
+    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+      item.payment_status === "Completed"
+        ? "bg-green-100 text-green-700"
+        : item.payment_status === "Partial"
+        ? "bg-yellow-100 text-yellow-700"
+        : "bg-red-100 text-red-700"
+    }`}
+  >
+    {item.payment_status}
+  </span>
+</td>
 
             </tr>
 

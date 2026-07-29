@@ -126,6 +126,7 @@ export default function CustomerTable({
           <thead>
             <tr className="border-b bg-gray-50">
               <th className="text-left p-3">Customer ID</th>
+              <th className="text-left p-3">Registration Date</th>
               <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Phone</th>
               <th className="text-left p-3">Project</th>
@@ -145,14 +146,25 @@ export default function CustomerTable({
                 <td className="p-3 font-medium">
                   {customer.customer_id}
                 </td>
-
+<td className="p-3">
+  {customer.registration_date
+    ? new Date(customer.registration_date).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      )
+    : "-"}
+</td>
                 <td className="p-3">{customer.customer_name}</td>
 
                 <td className="p-3">{customer.phone}</td>
 
                 <td className="p-3">{customer.project}</td>
 <td className="p-3">
-  {customer.assigned_employee_name ?? "-"}
+  {customer.employees?.full_name ?? "-"}
 </td>
                 <td className="p-3">{customer.plot_number}</td>
 

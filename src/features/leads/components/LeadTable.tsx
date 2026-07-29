@@ -92,6 +92,7 @@ export default function LeadTable({ onEdit }: LeadTableProps) {
         <thead>
 
           <tr className="border-b bg-gray-50">
+            <th className="text-left p-3"> Date </th>
 
             <th className="text-left p-3">Lead ID</th>
 
@@ -118,6 +119,18 @@ export default function LeadTable({ onEdit }: LeadTableProps) {
           {filteredLeads.map((lead) => (
 
             <tr key={lead.id} className="border-b">
+<td className="p-3">
+  {lead.site_visit_date
+    ? new Date(lead.site_visit_date).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      )
+    : "-"}
+</td>
 
               <td className="p-3">{lead.lead_id}</td>
 

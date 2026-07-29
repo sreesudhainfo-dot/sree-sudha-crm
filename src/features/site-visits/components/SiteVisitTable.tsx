@@ -7,6 +7,7 @@ import type {
 
 import {
   siteVisitService,
+  getSiteVisits,
   completeVisit,
   cancelVisit,
 } from "../services/siteVisits";
@@ -34,7 +35,7 @@ export default function SiteVisitTable({
     try {
       setLoading(true);
 
-      const data = await siteVisitService.getAll();
+      const data = await getSiteVisits();
 
       setVisits(data);
     } catch (error) {
@@ -257,12 +258,21 @@ export default function SiteVisitTable({
                 </td>
 
                 <td className="px-4 py-3">
-                  {visit.assigned_employee}
+                  {(visit as any).employeeName}
                 </td>
 
-                <td className="px-4 py-3">
-                  {visit.visit_date}
-                </td>
+                <td className="p-3">
+  {visit.visit_date
+    ? new Date(visit.visit_date).toLocaleDateString(
+        "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      )
+    : "-"}
+</td>
 
                 <td className="px-4 py-3">
                   {visit.visit_time}
