@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import EmployeeForm from "../components/EmployeeForm";
 import EmployeeTable from "../components/EmployeeTable";
 
 import {
@@ -8,16 +8,10 @@ import {
   type Employee,
 } from "../../../services/employees";
 
-import { useParams } from "react-router-dom";
-
 export default function EmployeesRolePage() {
-
   const { role } = useParams();
 
   const [employees, setEmployees] = useState<Employee[]>([]);
-
-  const [selectedEmployee, setSelectedEmployee] =
-    useState<Employee | null>(null);
 
   useEffect(() => {
     loadEmployees();
@@ -28,17 +22,7 @@ export default function EmployeesRolePage() {
     setEmployees(data || []);
   }
 
-  function handleEdit(employee: Employee) {
-    setSelectedEmployee(employee);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }
-
   const filteredEmployees = useMemo(() => {
-
     if (!role) return employees;
 
     const roleName = role
@@ -49,15 +33,11 @@ export default function EmployeesRolePage() {
       (employee) =>
         employee.roles?.role_name?.toLowerCase() === roleName
     );
-
   }, [employees, role]);
 
   return (
-
     <div className="space-y-6">
-
       <div>
-
         <h1 className="text-3xl font-bold capitalize">
           {role?.replace(/-/g, " ")}
         </h1>
@@ -65,25 +45,13 @@ export default function EmployeesRolePage() {
         <p className="text-slate-500">
           Department Employees
         </p>
-
       </div>
-
-      {/* <EmployeeForm
-        employee={selectedEmployee}
-        onEmployeeAdded={() => {
-          loadEmployees();
-          setSelectedEmployee(null);
-        }}
-      /> */}
 
       <EmployeeTable
         employees={filteredEmployees}
-        onEdit={handleEdit}
+        onEdit={() => {}}
         onRefresh={loadEmployees}
       />
-
     </div>
-
   );
-
 }

@@ -5,7 +5,6 @@ import { getMarketingHierarchy } from "../services/marketing";
 import type { MarketingEmployee } from "../types/MarketingEmployee";
 
 export default function MarketingDashboard() {
-  const navigate = useNavigate();
 
   const [employees, setEmployees] = useState<MarketingEmployee[]>([]);
   const [loading, setLoading] = useState(true);

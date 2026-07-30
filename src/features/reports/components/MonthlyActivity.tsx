@@ -17,15 +17,15 @@ const monthlyPresentDays = report.reduce(
   0
 );
 
-const monthlyAttendancePercentage =
-  report.length === 0
-    ? 0
-    : Math.round(
-        report.reduce(
-          (sum, item) => sum + item.attendance,
-          0
-        ) / report.length
-      );
+// const monthlyAttendancePercentage =
+//   report.length === 0
+//     ? 0
+//     : Math.round(
+//         report.reduce(
+//           (sum, item) => sum + item.attendance,
+//           0
+//         ) / report.length
+//       );
 
 const monthlyLeads = report.reduce(
   (sum, item) => sum + item.leads,

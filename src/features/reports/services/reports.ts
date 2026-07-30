@@ -100,24 +100,21 @@ export async function getSiteVisits() {
 ========================================== */
 
 export async function getEmployeePerformance() {
-
-  const [
-    employees,
-    attendance,
-    leads,
-    customers,
-    siteVisits,
-  ] = await Promise.all([
-    getEmployees(),
-    getAttendance(),
-    getLeads(),
-    getCustomers(),
-    getSiteVisits(),
-  ]);
+ const [
+  employees,
+  attendance,
+  leads,
+  customers,
+] = await Promise.all([
+  getEmployees(),
+  getAttendance(),
+  getLeads(),
+  getCustomers(),
+]);
 
   return employees.map((employee: any) => {
-        /* -------------------------
-       ATTENDANCE (Current Month)
+    /* -------------------------
+       ATTENDANCE
     -------------------------- */
 
     const employeeAttendance = attendance.filter(
@@ -130,93 +127,51 @@ export async function getEmployeePerformance() {
       (item: any) => item.status === "Present"
     ).length;
 
-    const totalAttendanceDays =
-      employeeAttendance.length;
-
-    const attendancePercentage =
-      totalAttendanceDays === 0
-        ? 0
-        : presentDays
     /* -------------------------
-       LEADS (Current Month)
+       LEADS
     -------------------------- */
 
     const employeeLeads = leads.filter(
       (lead: any) =>
-        Number(lead.assigned_to) ===
-          Number(employee.id) &&
+        Number(lead.assigned_to) === Number(employee.id) &&
         isCurrentMonth(lead.created_at)
     );
 
     /* -------------------------
-       CUSTOMERS (Current Month)
-       Customer -> Lead -> Employee
+       CUSTOMERS
     -------------------------- */
 
     const employeeCustomers = customers.filter(
-  (customer: any) =>
-    Number(customer.assigned_to) === Number(employee.id) &&
-    isCurrentMonth(customer.created_at)
-);
-
-    /* -------------------------
-       SITE VISITS (Current Month)
-    -------------------------- */
-
-    const employeeSiteVisits =
-      siteVisits.filter(
-        (visit: any) =>
-          Number(
-            visit.assigned_employee
-          ) === Number(employee.id) &&
-          isCurrentMonth(
-            visit.visit_date
-          )
-      );
+      (customer: any) =>
+        Number(customer.assigned_to) === Number(employee.id) &&
+        isCurrentMonth(customer.created_at)
+    );
 
     /* -------------------------
        BOOKINGS
     -------------------------- */
 
-    const bookings =
-      employeeCustomers.filter(
-        (customer: any) =>
-          Number(
-            customer.booking_amount ?? 0
-          ) > 0
-      );
+    const bookings = employeeCustomers.filter(
+      (customer: any) =>
+        Number(customer.booking_amount ?? 0) > 0
+    );
 
-    const bookingAmount =
-      bookings.reduce(
-        (
-          sum: number,
-          booking: any
-        ) =>
-          sum +
-          Number(
-            booking.booking_amount ??
-              0
-          ),
-        0
-      );
-      return {
-  employee,
+    return {
+      employee,
 
-  attendance: presentDays,
+      attendance: presentDays,
 
-  leads: employeeLeads.length,
+      leads: employeeLeads.length,
 
-  customers: employeeCustomers.length,
+      customers: employeeCustomers.length,
 
-  bookings: bookings.length,
+      bookings: bookings.length,
 
-  // revenue,
+      attendanceList: employeeAttendance,
 
-  attendanceList: employeeAttendance,
+      leadList: employeeLeads,
 
-  leadList: employeeLeads,
-
-  customerList: employeeCustomers,
-};
+      customerList: employeeCustomers,
+    };
   });
 }
