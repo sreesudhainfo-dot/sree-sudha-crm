@@ -4,17 +4,19 @@ export type AttendanceStatus =
   | "Half Day";
 
 export interface Attendance {
-  id: number;
+  id: string;
+
   employee_id: string;
-  full_name: string;
-  role_id: number;
 
-  roles?: {
-    id: number;
-    role_name: string;
-  };
+  employee_name: string;
 
-//   remarks?: string;
+  attendance_date: string;
+
+  status: AttendanceStatus;
+
+  check_in: string | null;
+
+  check_out: string | null;
 
   created_at?: string;
 

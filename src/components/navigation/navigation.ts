@@ -2,8 +2,6 @@ import {
   FaChartPie,
   FaUsers,
   FaBullhorn,
-  FaUserTie,
-  FaUserFriends,
   FaBuilding,
   FaClipboardCheck,
   FaDatabase,
@@ -11,7 +9,7 @@ import {
   FaMapMarkedAlt,
   FaImages,
   FaChartBar,
-  FaCog,
+  
 } from "react-icons/fa";
 
 export const navigation = [
